@@ -4691,6 +4691,12 @@ export type TLFVisibility =
   | 1 // PUBLIC_1
   | 2 // PRIVATE_2
 
+export type TeamAccessRequest = {
+  teamID: TeamID,
+  uid: UID,
+  eldestSeqno: Seqno,
+}
+
 export type TeamAddMemberResult = {
   invited: boolean,
   user?: ?User,
@@ -4844,6 +4850,11 @@ export type TeamNameLogPoint = {
 }
 
 export type TeamNamePart = string
+
+export type TeamOpenReqMsg = {
+  teamID: TeamID,
+  tars?: ?Array<TeamAccessRequest>,
+}
 
 export type TeamPlusApplicationKeys = {
   id: TeamID,
@@ -6122,7 +6133,8 @@ export type teamsTeamChangeMembershipRpcParam = Exact<{
 
 export type teamsTeamCreateRpcParam = Exact<{
   name: string,
-  sendChatNotification: boolean
+  sendChatNotification: boolean,
+  open: boolean
 }>
 
 export type teamsTeamDeleteRpcParam = Exact<{

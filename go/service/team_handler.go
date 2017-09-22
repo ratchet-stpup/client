@@ -36,6 +36,8 @@ func (r *teamHandler) Create(ctx context.Context, cli gregor1.IncomingInterface,
 		return true, r.rotateTeam(ctx, item)
 	case "team.sbs":
 		return true, r.sharingBeforeSignup(ctx, item)
+	case "team.openreq":
+		return true, r.openTeamAccessRequest(ctx, item)
 	case "team.change":
 		return true, r.changeTeam(ctx, item, keybase1.TeamChangeSet{})
 	case "team.rename":
@@ -95,6 +97,23 @@ func (r *teamHandler) sharingBeforeSignup(ctx context.Context, item gregor.Item)
 	r.G().Log.Debug("team.sbs unmarshaled: %+v", msg)
 
 	if err := teams.HandleSBSRequest(ctx, r.G(), msg); err != nil {
+		return err
+	}
+
+	r.G().Log.Debug("dismissing team.sbs item since it succeeded")
+	return r.G().GregorDismisser.DismissItem(item.Metadata().MsgID())
+}
+
+func (r *teamHandler) openTeamAccessRequest(ctx context.Context, item gregor.Item) error {
+	r.G().Log.Debug("team.openreq received")
+	var msg keybase1.TeamOpenReqMsg
+	if err := json.Unmarshal(item.Body().Bytes(), &msg); err != nil {
+		r.G().Log.Debug("error unmarshaling team.openreq item: %s", err)
+		return err
+	}
+	r.G().Log.Debug("team.openreq unmarshaled: %+v", msg)
+
+	if err := teams.HandleOpenTeamAccessRequest(ctx, r.G(), msg); err != nil {
 		return err
 	}
 
