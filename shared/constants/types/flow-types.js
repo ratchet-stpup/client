@@ -4903,6 +4903,7 @@ export type TeamSigChainState = {
   linkIDs: {[key: string]: LinkID},
   stubbedLinks: {[key: string]: boolean},
   activeInvites: {[key: string]: TeamInvite},
+  open: boolean,
 }
 
 export type TeamTreeEntry = {

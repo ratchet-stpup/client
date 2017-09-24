@@ -659,6 +659,7 @@ type TeamSigChainState struct {
 	LinkIDs       map[Seqno]LinkID                    `codec:"linkIDs" json:"linkIDs"`
 	StubbedLinks  map[Seqno]bool                      `codec:"stubbedLinks" json:"stubbedLinks"`
 	ActiveInvites map[TeamInviteID]TeamInvite         `codec:"activeInvites" json:"activeInvites"`
+	Open          bool                                `codec:"open" json:"open"`
 }
 
 func (o TeamSigChainState) DeepCopy() TeamSigChainState {
@@ -754,6 +755,7 @@ func (o TeamSigChainState) DeepCopy() TeamSigChainState {
 			}
 			return ret
 		})(o.ActiveInvites),
+		Open: o.Open,
 	}
 }
 
